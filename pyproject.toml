@@ -1,0 +1,42 @@
+[project]
+name = "apple-journal-mcp"
+version = "0.1.0"
+description = "Read-only MCP server for Apple Journal via journal-cli"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Lisen Dai" }]
+requires-python = ">=3.10"
+classifiers = [
+    "Operating System :: MacOS",
+    "Programming Language :: Python :: 3",
+]
+# 1.21.1 is the oldest mcp that imports cleanly against current pydantic
+# (tool annotations need >=1.7). mcp 2.x renamed FastMCP to MCPServer; this
+# server uses the v1 API.
+dependencies = ["mcp>=1.21.1,<2"]
+
+[project.urls]
+Repository = "https://github.com/Ls-Dai/apple-journal-mcp"
+
+[project.scripts]
+apple-journal-mcp = "apple_journal_mcp.server:main"
+
+[dependency-groups]
+dev = ["pytest>=8", "ruff>=0.6"]
+
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "integration: runs the real journal-cli against a synthetic store (needs JOURNAL_CLI_SRC)",
+]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
