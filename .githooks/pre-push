@@ -1,0 +1,15 @@
+#!/bin/sh
+# main only changes through pull requests, so never push to it directly.
+# This also catches local merges into main, which pre-commit does not see.
+# Enable once per clone: git config core.hooksPath .githooks
+
+# stdin: one "<local ref> <local sha> <remote ref> <remote sha>" line per ref
+while read -r _local_ref _local_sha remote_ref _remote_sha; do
+  if [ "$remote_ref" = "refs/heads/main" ]; then
+    echo "pre-push: refusing to push to main." >&2
+    echo "  Push a branch and open a pull request instead:" >&2
+    echo "    git push -u origin <branch> && gh pr create" >&2
+    exit 1
+  fi
+done
+exit 0
